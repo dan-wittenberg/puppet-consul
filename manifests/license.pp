@@ -14,7 +14,7 @@ class consul::license {
     owner   => 'root',
     group   => 'root',
     mode    => '0400',
-    content => "${consul::enterprise_license}\n",
+    content => $consul::enterprise_license,
   }
 
   exec { 'update-consul-license':
