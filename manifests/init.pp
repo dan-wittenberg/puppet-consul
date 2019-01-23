@@ -55,6 +55,9 @@
 # [*download_url_base*]
 #   Base url to the location of the archive file containing the consul binary.
 #
+# [*enterprise_license*]
+#   String version of the enterprise license
+#
 # [*extra_groups*]
 #   Extra groups to add the consul system user to.
 #
@@ -177,6 +180,7 @@ class consul (
   $download_extension                        = $consul::params::download_extension,
   Optional[Stdlib::HTTPUrl] $download_url    = undef,
   $download_url_base                         = $consul::params::download_url_base,
+  Optional[String] $enterprise_license       = undef,
   Array $extra_groups                        = $consul::params::extra_groups,
   $extra_options                             = $consul::params::extra_options,
   $group                                     = $consul::params::group,
@@ -272,6 +276,7 @@ class consul (
     purge       => $purge_config_dir,
     notify      => $notify_service,
   }
+  -> class { 'consul::license': }
   -> class { 'consul::run_service': }
   -> class { 'consul::reload_service': }
   -> anchor {'consul_last': }
