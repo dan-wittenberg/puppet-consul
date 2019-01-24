@@ -11,6 +11,10 @@ class consul::license {
 
   if($consul::enterprise_license) {
     file { "${consul::config_dir}/consul_enterprise.hclic":
+      ensure  => absent,
+    }
+
+    file { "${consul::data_dir}/consul_enterprise.hclic":
       ensure  => file,
       owner   => 'consul',
       group   => 'consul',
@@ -20,10 +24,10 @@ class consul::license {
 
     exec { 'update-consul-license':
       path      => '/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin',
-      command   => "consul license put @${consul::config_dir}/consul_enterprise.hclic",
+      command   => "consul license put @${consul::data_dir}/consul_enterprise.hclic",
       onlyif    => 'consul license get |grep "License ID: temporary"',
       logoutput => true,
-      require   => File["${consul::config_dir}/consul_enterprise.hclic"],
+      require   => File["${consul::data_dir}/consul_enterprise.hclic"],
     }
   }
 }
